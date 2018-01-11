@@ -1,0 +1,4 @@
+---
+- hosts: node-1
+  roles:
+    - haproxy

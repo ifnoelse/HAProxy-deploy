@@ -1,0 +1,7 @@
+- name: 复制 HAProxy 源码
+  copy:
+    src: haproxy-1.8.3.tar.gz
+    dest: /etc/foo.conf
+    owner: foo
+    group: foo
+    mode: 0644
