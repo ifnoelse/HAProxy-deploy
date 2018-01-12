@@ -3,7 +3,7 @@ all:
     haproxy:
       hosts:
         node-1:
-#        node-2:
+        node-2:
   vars:
     haproxy_install_path: /usr/local/haproxy
     haproxy_parent_src_dir: /tmp

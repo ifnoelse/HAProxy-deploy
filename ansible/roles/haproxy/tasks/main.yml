@@ -3,42 +3,55 @@
 #    url: http://www.haproxy.org/download/1.8/src/haproxy-1.8.3.tar.gz
 #    dest: /tmp/haproxy-1.8.3.tar.gz
 
-- name: 解压 HAProxy 源码
-  become: true
-  unarchive:
-    src: "{{haproxy_tgz}}"
-    dest: "{{haproxy_parent_src_dir}}"
-
-- name: 编译 HAProxy
-  become: yes
-  make:
-    chdir: "{{haproxy_src_dir}}"
-    params:
-      TARGET: linux3100
-      PREFIX: "{{haproxy_install_path}}"
-
-- name: 安装 HAProxy
-  become: yes
-  make:
-    chdir: "{{haproxy_src_dir}}"
-    target: install
-    params:
-      PREFIX: "{{haproxy_install_path}}"
-
-- name: 链接 HAProxy 执行程序到 /usr/local/sbin 下
-  become: true
-  file:
-    src: "{{haproxy_install_path}}/sbin/haproxy"
-    dest: "/usr/local/sbin/haproxy"
-    state: link
-
-- name: 创建 HAProxy 配置目录
-  become: true
-  file:
-    path: "{{haproxy_install_path}}/conf"
-    state: directory
-#
-#- name: 复制 HAProxy 配置文件
+#- name: 解压 HAProxy 源码
 #  become: true
-#  copy:
-#    src:
+#  unarchive:
+#    src: "{{haproxy_tgz}}"
+#    dest: "{{haproxy_parent_src_dir}}"
+#
+#- name: 编译 HAProxy
+#  become: yes
+#  make:
+#    chdir: "{{haproxy_src_dir}}"
+#    params:
+#      TARGET: linux3100
+#      PREFIX: "{{haproxy_install_path}}"
+#
+#- name: 安装 HAProxy
+#  become: yes
+#  make:
+#    chdir: "{{haproxy_src_dir}}"
+#    target: install
+#    params:
+#      PREFIX: "{{haproxy_install_path}}"
+#
+#- name: 链接 HAProxy 执行程序到 /usr/local/sbin 下
+#  become: true
+#  file:
+#    src: "{{haproxy_install_path}}/sbin/haproxy"
+#    dest: "/usr/local/sbin/haproxy"
+#    state: link
+
+#- name: 创建 HAProxy 配置目录
+#  become: true
+#  file:
+#    path: /etc/haproxy/
+#    state: directory
+
+- name: 复制 HAProxy 配置文件
+  become: true
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+
+#- name: 复制 OPTIONS 配置文件
+#  become: true
+#  template:
+#    src: haproxy.j2
+#    dest: /etc/sysconfig/haproxy
+#
+#- name: 生成 HAProxy 相关服务
+#  become: true
+#  template:
+#    src: haproxy.service.j2
+#    dest: /lib/systemd/system/haproxy.service
